@@ -644,6 +644,37 @@ value of 'mew-mail-domain' is used."
 
 (defvar mew-smtp-timeout-time 4)
 
+(defcustom mew-smtp-oauth2-auth-url nil
+  "*The OAuth 2.0 authorization endpoint."
+  :group 'mew-smtp
+  :type '(choice string (const nil)))
+
+(defcustom mew-smtp-oauth2-token-url nil
+  "*The OAuth 2.0 token endpoint."
+  :group 'mew-smtp
+  :type '(choice string (const nil)))
+
+(defcustom mew-smtp-oauth2-redirect-url nil
+  "*The OAuth 2.0 redirection endpoint."
+  :group 'mew-smtp
+  :type '(choice string (const nil)))
+
+(defcustom mew-smtp-oauth2-scope nil
+  "*The OAuth 2.0 access token scope."
+  :group 'mew-smtp
+  :type '(choice string (const nil)))
+
+(defcustom mew-smtp-oauth2-client-id nil
+  "*The OAuth 2.0 client identifier."
+  :group 'mew-smtp
+  :type '(choice string (const nil)))
+
+(defcustom mew-smtp-oauth2-client-secret nil
+  "*The OAuth 2.0 client secret."
+  :group 'mew-smtp
+  :type '(choice string (const nil)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Retrieving messages
@@ -779,6 +810,36 @@ If non-nil, only header is retrieved."
 
 (defvar mew-pop-timeout-time 4)
 
+(defcustom mew-pop-oauth2-auth-url nil
+  "*The OAuth 2.0 authorization endpoint."
+  :group 'mew-pop
+  :type '(choice string (const nil)))
+
+(defcustom mew-pop-oauth2-token-url nil
+  "*The OAuth 2.0 token endpoint."
+  :group 'mew-pop
+  :type '(choice string (const nil)))
+
+(defcustom mew-pop-oauth2-redirect-url nil
+  "*The OAuth 2.0 redirection endpoint."
+  :group 'mew-pop
+  :type '(choice string (const nil)))
+
+(defcustom mew-pop-oauth2-scope nil
+  "*The OAuth 2.0 access token scope."
+  :group 'mew-pop
+  :type '(choice string (const nil)))
+
+(defcustom mew-pop-oauth2-client-id nil
+  "*The OAuth 2.0 client identifier."
+  :group 'mew-pop
+  :type '(choice string (const nil)))
+
+(defcustom mew-pop-oauth2-client-secret nil
+  "*The OAuth 2.0 client secret."
+  :group 'mew-pop
+  :type '(choice string (const nil)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; IMAP
@@ -895,6 +956,48 @@ Mail/inbox.
   :type '(choice string (const nil)))
 
 (defvar mew-imap-timeout-time 4)
+
+;; google: https://accounts.google.com/o/oauth2/auth
+;; microsoft: https://login.microsoftonline.com/{xxx}/oauth2/v2.0/authorize
+(defcustom mew-imap-oauth2-auth-url nil
+  "*The OAuth 2.0 authorization endpoint."
+  :group 'mew-imap
+  :type '(choice string (const nil)))
+
+;; google: https://accounts.google.com/o/oauth2/token
+;; microsoft: https://login.microsoftonline.com/{xxx}/oauth2/v2.0/token
+(defcustom mew-imap-oauth2-token-url nil
+  "*The OAuth 2.0 token endpoint."
+  :group 'mew-imap
+  :type '(choice string (const nil)))
+
+;; e.g. http://localhost/ - get code from browser URL window
+;; or TOOD: start simple-http to extract the code automatically
+(defcustom mew-imap-oauth2-redirect-url nil
+  "*The OAuth 2.0 redirection endpoint."
+  :group 'mew-imap
+  :type '(choice string (const nil)))
+
+;; google: https://mail.google.com/
+;; microsoft: "offline_access https://outlook.office.com/IMAP.AccessAsUser.All"
+(defcustom mew-imap-oauth2-scope nil
+  "*The OAuth 2.0 access token scope."
+  :group 'mew-imap
+  :type '(choice string (const nil)))
+
+;; google: xxxxxxxxapps.googleusercontent.com
+;; microsoft: need to get from app registration
+(defcustom mew-imap-oauth2-client-id nil
+  "*The OAuth 2.0 client identifier."
+  :group 'mew-imap
+  :type '(choice string (const nil)))
+
+;; google: ???
+;; microsoft: seems "" works
+(defcustom mew-imap-oauth2-client-secret nil
+  "*The OAuth 2.0 client secret."
+  :group 'mew-imap
+  :type '(choice string (const nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

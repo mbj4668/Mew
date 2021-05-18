@@ -214,6 +214,24 @@
 (defun mew-smtp-auth-plain-authorize-id (&optional case)
   (mew-cfent-value case "smtp-auth-plain-authorize-id" mew-smtp-auth-plain-authorize-id))
 
+(defun mew-smtp-oauth2-auth-url (&optional case)
+  (mew-cfent-value case "smtp-oauth2-auth-url" mew-smtp-oauth2-auth-url))
+
+(defun mew-smtp-oauth2-token-url (&optional case)
+  (mew-cfent-value case "smtp-oauth2-token-url" mew-smtp-oauth2-token-url))
+
+(defun mew-smtp-oauth2-redirect-url (&optional case)
+  (mew-cfent-value case "smtp-oauth2-redirect-url" mew-smtp-oauth2-redirect-url))
+
+(defun mew-smtp-oauth2-scope (&optional case)
+  (mew-cfent-value case "smtp-oauth2-scope" mew-smtp-oauth2-scope))
+
+(defun mew-smtp-oauth2-client-id (&optional case)
+  (mew-cfent-value case "smtp-oauth2-client-id" mew-smtp-oauth2-client-id))
+
+(defun mew-smtp-oauth2-client-secret (&optional case)
+  (mew-cfent-value case "smtp-oauth2-client-secret" mew-smtp-oauth2-client-secret))
+
 ;;
 
 (defun mew-mailbox-type (&optional case)
@@ -271,6 +289,24 @@
 (defun mew-pop-header-only (&optional case)
   (mew-cfent-value case "pop-header-only" mew-pop-header-only))
 
+(defun mew-pop-oauth2-auth-url (&optional case)
+  (mew-cfent-value case "pop-oauth2-auth-url" mew-pop-oauth2-auth-url))
+
+(defun mew-pop-oauth2-token-url (&optional case)
+  (mew-cfent-value case "pop-oauth2-token-url" mew-pop-oauth2-token-url))
+
+(defun mew-pop-oauth2-redirect-url (&optional case)
+  (mew-cfent-value case "pop-oauth2-redirect-url" mew-pop-oauth2-redirect-url))
+
+(defun mew-pop-oauth2-scope (&optional case)
+  (mew-cfent-value case "pop-oauth2-scope" mew-pop-oauth2-scope))
+
+(defun mew-pop-oauth2-client-id (&optional case)
+  (mew-cfent-value case "pop-oauth2-client-id" mew-pop-oauth2-client-id))
+
+(defun mew-pop-oauth2-client-secret (&optional case)
+  (mew-cfent-value case "pop-oauth2-client-secret" mew-pop-oauth2-client-secret))
+
 ;;
 
 (defun mew-imap-server (&optional case)
@@ -314,6 +350,24 @@
 
 (defun mew-imap-prefix-list (&optional case)
   (mew-cfent-value case "imap-prefix-list" mew-imap-prefix-list 'list))
+
+(defun mew-imap-oauth2-auth-url (&optional case)
+  (mew-cfent-value case "imap-oauth2-auth-url" mew-imap-oauth2-auth-url))
+
+(defun mew-imap-oauth2-token-url (&optional case)
+  (mew-cfent-value case "imap-oauth2-token-url" mew-imap-oauth2-token-url))
+
+(defun mew-imap-oauth2-redirect-url (&optional case)
+  (mew-cfent-value case "imap-oauth2-redirect-url" mew-imap-oauth2-redirect-url))
+
+(defun mew-imap-oauth2-scope (&optional case)
+  (mew-cfent-value case "imap-oauth2-scope" mew-imap-oauth2-scope))
+
+(defun mew-imap-oauth2-client-id (&optional case)
+  (mew-cfent-value case "imap-oauth2-client-id" mew-imap-oauth2-client-id))
+
+(defun mew-imap-oauth2-client-secret (&optional case)
+  (mew-cfent-value case "imap-oauth2-client-secret" mew-imap-oauth2-client-secret))
 
 ;;
 

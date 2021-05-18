@@ -36,6 +36,9 @@
     "rtrs" "dels" "uidl" "range"
     "rttl" "rcnt" "dttl" "rgttl" "rgcnt" "dgttl" "dgcnt" "jcnt" "rfl" "hlds"
     "user" "auth" "auth-list" "passwd" "account"
+    "oauth2-auth-url" "oauth2-token-url"
+    "oauth2-scope" "oauth2-client-id"
+    "oauth2-client-secret" "oauth2-redirect-url"
     "size" "truncated" "get-body"
     "flush" "no-msg" "msgdb" "done" "dispatched" "error"
     "delete"
@@ -1012,36 +1015,26 @@
 ;;;;;;;;;;;;;;;;
 ;; XOAUTH2
 
+(defun mew-imap-oauth2-access-token (pnm)
+  (mew-auth-oauth2-access-token
+   (mew-imap-get-oauth2-auth-url pnm)
+   (mew-imap-get-oauth2-token-url pnm)
+   (mew-imap-get-oauth2-scope pnm)
+   (mew-imap-get-oauth2-client-id pnm)
+   (mew-imap-get-oauth2-client-secret pnm)
+   (mew-imap-get-oauth2-redirect-url pnm)))
+
 (defun mew-imap-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-imap-get-user pnm))
-         (token (mew-auth-oauth2-token-access-token))
+         (token (mew-imap-oauth2-access-token pnm))
          (auth-string (mew-auth-xoauth2-auth-string user token)))
     ;; XXX: need to reset satus if token is nil.
     (mew-imap-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
     (mew-imap-set-status pnm "auth-xoauth2")))
 
-;; XXX: defalias does not work!
-;; (defalias 'mew-imap2-command-auth-xoauth2 'mew-imap-command-auth-xoauth2)
-(defun mew-imap2-command-auth-xoauth2 (pro pnm)
-  (let* ((user (mew-imap2-get-user pnm))
-         (token (mew-auth-oauth2-token-access-token))
-         (auth-string (mew-auth-xoauth2-auth-string user token)))
-    ;; XXX: need to reset satus if token is nil.
-    (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
-    (mew-imap2-set-status pnm "auth-xoauth2")))
-
 (defun mew-imap-command-xoauth2-wpwd (pro pnm)
   (mew-imap-set-done pnm t)
   (mew-passwd-set-passwd (mew-imap-passtag pnm) nil)
-  (delete-process pro)
-  ;; XXX: Should be cared more! Clear process and filter without sending LOGOUT.
-  (error "IMAP XOAUTH2 token is wrong!"))
-
-;; XXX: defalias does not work!
-;; (defalias 'mew-imap2-command-xoauth2-wpwd 'mew-imap-command-xoauth2-wpwd)
-(defun mew-imap2-command-xoauth2-wpwd (pro pnm)
-  (mew-imap2-set-done pnm t)
-  (mew-passwd-set-passwd (mew-imap2-passtag pnm) nil)
   (delete-process pro)
   ;; XXX: Should be cared more! Clear process and filter without sending LOGOUT.
   (error "IMAP XOAUTH2 token is wrong!"))
@@ -1367,6 +1360,12 @@
         (mew-imap-set-account pnm (format "%s@%s" user server))
 	(mew-imap-set-auth pnm (mew-imap-auth case))
 	(mew-imap-set-auth-list pnm (mew-imap-auth-list case))
+	(mew-imap-set-oauth2-auth-url pnm (mew-imap-oauth2-auth-url case))
+	(mew-imap-set-oauth2-token-url pnm (mew-imap-oauth2-token-url case))
+	(mew-imap-set-oauth2-scope pnm (mew-imap-oauth2-scope case))
+	(mew-imap-set-oauth2-client-id pnm (mew-imap-oauth2-client-id case))
+	(mew-imap-set-oauth2-client-secret pnm (mew-imap-oauth2-client-secret case))
+	(mew-imap-set-oauth2-redirect-url pnm (mew-imap-oauth2-redirect-url case))
 	(mew-imap-set-status pnm "greeting")
 	(mew-imap-set-directive pnm directive)
 	(mew-imap-set-bnm pnm bnm)

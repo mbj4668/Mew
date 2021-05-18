@@ -20,12 +20,15 @@
     "src" "messages" "src-list" "src-list-orig"
     "server" "port" "ssh-server"
     "user" "auth" "auth-list" "account"
+    "oauth2-auth-url" "oauth2-token-url"
+    "oauth2-scope" "oauth2-client-id"
+    "oauth2-client-secret" "oauth2-redirect-url"
     "status" "process" "ssh-process" "ssl-process"
     "cnt" "ttl" "literal+"
     ;; parameters used internally and should be initialized
     "tag" "string" "error" "auth-selected" "authl" "aux" "done"))
 
-(defvar mew-imap2-info-list-clean-length 20)
+(defvar mew-imap2-info-list-clean-length 26)
 
 (mew-info-defun "mew-imap2-" mew-imap2-info-list)
 
@@ -280,6 +283,33 @@
          (epasswd (mew-base64-encode-string passwd)))
     (mew-imap2-process-send-string2 pro epasswd)))
 
+;;;;;;;;;;;;;;;;
+;; XOAUTH2
+
+(defun mew-imap2-oauth2-access-token (pnm)
+  (mew-auth-oauth2-access-token
+   (mew-imap2-get-oauth2-auth-url pnm)
+   (mew-imap2-get-oauth2-token-url pnm)
+   (mew-imap2-get-oauth2-scope pnm)
+   (mew-imap2-get-oauth2-client-id pnm)
+   (mew-imap2-get-oauth2-client-secret pnm)
+   (mew-imap2-get-oauth2-redirect-url pnm)))
+
+(defun mew-imap2-command-auth-xoauth2 (pro pnm)
+  (let* ((user (mew-imap2-get-user pnm))
+         (token (mew-imap2-oauth2-access-token pnm))
+         (auth-string (mew-auth-xoauth2-auth-string user token)))
+    ;; XXX: need to reset satus if token is nil.
+    (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
+    (mew-imap2-set-status pnm "auth-xoauth2")))
+
+(defun mew-imap2-command-xoauth2-wpwd (pro pnm)
+  (mew-imap2-set-done pnm t)
+  (mew-passwd-set-passwd (mew-imap2-passtag pnm) nil)
+  (delete-process pro)
+  ;; XXX: Should be cared more! Clear process and filter without sending LOGOUT.
+  (error "IMAP XOAUTH2 token is wrong!"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Sub functions
@@ -442,6 +472,12 @@
       (mew-imap2-set-account pnm (format "%s@%s" user server))
       (mew-imap2-set-auth pnm (mew-imap-auth case))
       (mew-imap2-set-auth-list pnm (mew-imap-auth-list case))
+      (mew-imap2-set-oauth2-auth-url pnm (mew-imap-oauth2-auth-url case))
+      (mew-imap2-set-oauth2-token-url pnm (mew-imap-oauth2-token-url case))
+      (mew-imap2-set-oauth2-scope pnm (mew-imap-oauth2-scope case))
+      (mew-imap2-set-oauth2-client-id pnm (mew-imap-oauth2-client-id case))
+      (mew-imap2-set-oauth2-client-secret pnm (mew-imap-oauth2-client-secret case))
+      (mew-imap2-set-oauth2-redirect-url pnm (mew-imap-oauth2-redirect-url case))
       (mew-imap2-set-status pnm "greeting")
       (mew-imap2-set-src-list pnm src-list)
       (mew-imap2-set-src-list-orig pnm src-list)

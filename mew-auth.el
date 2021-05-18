@@ -89,67 +89,19 @@
       "OK" ;; XXX: Maybe OK if not JSON.
       )))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; OAuth2
-
-;; FIXME: these should be moved to config-alist
-
-;; For now:
-
-;;      (setq mew-auth-oauth-client-id "xxxxxxxxxapps.googleusercontent.com"
-;;            mew-auth-oauth-client-secret ""
-;;            mew-auth-oauth2-scope "offline_access"
-;;            plstore-cache-passphrase-for-symmetric-encryption t
-;;            epg-pinentry-mode 'loopback)
-
-(defvar mew-auth-oauth2-client-id
-  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com")
-
-(defvar mew-auth-oauth2-client-secret
-  "xxxxxxxxxxxxxxxxxxxxxxxx")
-
-(defvar mew-auth-oauth2-auth-url "https://login.microsoftonline.com/xxxxx/oauth2/v2.0/authorize"
-  "OAuth2 auth server URL.")
-
-(defvar mew-auth-oauth2-token-url "https://login.microsoftonline.com/xxxxx/oauth2/v2.0/token"
-  "OAuth2 token server URL.")
-
-(defvar mew-auth-oauth2-scope "offline_access https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send"
-  "URL used to request access to Mail Resources.")
-
-(defvar mew-auth-oauth2-redirect-url "http://localhost/"
-  "URL used to OAuth redirect url.")
-
 (declare-function oauth2-auth-and-store "oauth2")
-(declare-function oauth2-refresh-access "oauth2")
 (declare-function oauth2-token-access-token "oauth2")
 
-(defun mew-auth-oauth2-auth-and-store
-    (scope client-id client-secret &optional redirect-url)
-  "Request access to a mail resource and store it using `auth-source'."
-  (require 'oauth2)
-  (oauth2-auth-and-store
-   mew-auth-oauth2-auth-url
-   mew-auth-oauth2-token-url
-   scope
-   client-id
-   client-secret
-   redirect-url))
-
-(defun mew-auth-oauth2-token ()
-  "Get OAuth token for Mew to access mail service."
-  (require 'oauth2)
-  (let ((token (mew-auth-oauth2-auth-and-store
-                mew-auth-oauth2-scope
-                mew-auth-oauth2-client-id
-                mew-auth-oauth2-client-secret
-                mew-auth-oauth2-redirect-url)))
-;    (oauth2-refresh-access token)
-    token))
-
-(defun mew-auth-oauth2-token-access-token ()
-  (require 'oauth2)
-  (ignore-errors (oauth2-token-access-token (mew-auth-oauth2-token))))
+(defun mew-auth-oauth2-access-token (auth-url token-url scope client-id client-secret redirect-url)
+  (ignore-errors
+    (oauth2-token-access-token
+     (oauth2-auth-and-store
+      auth-url
+      token-url
+      scope
+      client-id
+      client-secret
+      redirect-url))))
 
 (provide 'mew-auth)
 

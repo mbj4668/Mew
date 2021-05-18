@@ -23,6 +23,9 @@
     "helo-domain"
     "status" "process" "ssh-process" "ssl-process" "ssl-p"
     "qfld" "messages"
+    "oauth2-auth-url" "oauth2-token-url"
+    "oauth2-scope" "oauth2-client-id"
+    "oauth2-client-secret" "oauth2-redirect-url"
     ;; parameters used internally and should be initialized
     "string" "error" "auth-selected" "timer" "cont" "from" "sender"
     "done" "imapp" "capa" "fallback"))
@@ -310,9 +313,18 @@
     (mew-smtp-process-send-string pro "AUTH PLAIN %s" plain)
     (mew-smtp-set-status pnm "auth-plain")))
 
+(defun mew-smtp-oauth2-access-token (pnm)
+  (mew-auth-oauth2-access-token
+   (mew-smtp-get-oauth2-auth-url pnm)
+   (mew-smtp-get-oauth2-token-url pnm)
+   (mew-smtp-get-oauth2-scope pnm)
+   (mew-smtp-get-oauth2-client-id pnm)
+   (mew-smtp-get-oauth2-client-secret pnm)
+   (mew-smtp-get-oauth2-redirect-url pnm)))
+
 (defun mew-smtp-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-smtp-get-auth-user pnm))
-         (token (mew-auth-oauth2-token-access-token))
+         (token (mew-smtp-oauth2-access-token pnm))
          (auth-string (mew-auth-xoauth2-auth-string user token)))
     (mew-smtp-process-send-string pro "AUTH XOAUTH2 %s" auth-string)
     (mew-smtp-set-status pnm "auth-xoauth2")))
@@ -523,6 +535,12 @@
       (mew-smtp-set-user pnm user)
       (mew-smtp-set-auth-user pnm (mew-smtp-user case))
       (mew-smtp-set-auth-list pnm (mew-smtp-auth-list case))
+      (mew-smtp-set-oauth2-auth-url pnm (mew-smtp-oauth2-auth-url case))
+      (mew-smtp-set-oauth2-token-url pnm (mew-smtp-oauth2-token-url case))
+      (mew-smtp-set-oauth2-scope pnm (mew-smtp-oauth2-scope case))
+      (mew-smtp-set-oauth2-client-id pnm (mew-smtp-oauth2-client-id case))
+      (mew-smtp-set-oauth2-client-secret pnm (mew-smtp-oauth2-client-secret case))
+      (mew-smtp-set-oauth2-redirect-url pnm (mew-smtp-oauth2-redirect-url case))
       (mew-smtp-set-status pnm "greeting")
       (mew-smtp-set-fallback pnm fallback)
       ;;
