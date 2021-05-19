@@ -91,17 +91,21 @@
 
 (declare-function oauth2-auth-and-store "oauth2")
 (declare-function oauth2-token-access-token "oauth2")
+(declare-function oauth2-refresh-access "oauth2")
 
-(defun mew-auth-oauth2-access-token (auth-url token-url scope client-id client-secret redirect-url)
+(mew-defstruct oauth2-info auth-url token-url scope client-id client-secret redirect-url)
+
+(defun mew-auth-oauth2-access-token (oauth2-info)
   (ignore-errors
     (oauth2-token-access-token
-     (oauth2-auth-and-store
-      auth-url
-      token-url
-      scope
-      client-id
-      client-secret
-      redirect-url))))
+     (oauth2-refresh-access
+      (oauth2-auth-and-store
+       (mew-oauth2-info-get-auth-url oauth2-info)
+       (mew-oauth2-info-get-token-url oauth2-info)
+       (mew-oauth2-info-get-scope oauth2-info)
+       (mew-oauth2-info-get-client-id oauth2-info)
+       (mew-oauth2-info-get-client-secret oauth2-info)
+       (mew-oauth2-info-get-redirect-url oauth2-info))))))
 
 (provide 'mew-auth)
 

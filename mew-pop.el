@@ -27,9 +27,7 @@
     "rttl" "rcnt" "dttl" "dcnt" "hlds"
     "user" "auth" "auth-list" "key" "passwd" "account"
     "size" "truncated" "get-body"
-    "oauth2-auth-url" "oauth2-token-url"
-    "oauth2-scope" "oauth2-client-id"
-    "oauth2-client-secret" "oauth2-redirect-url"
+    "oauth2-auth-info"
     "flush" "no-msg" "msgdb" "done" "dispatched" "error"
     "body-lines" "delete" "case"
     "virtual-info" "disp-info" "status-buf"))
@@ -515,12 +513,7 @@
 
 (defun mew-pop-oauth2-access-token (pnm)
   (mew-auth-oauth2-access-token
-   (mew-pop-get-oauth2-auth-url pnm)
-   (mew-pop-get-oauth2-token-url pnm)
-   (mew-pop-get-oauth2-scope pnm)
-   (mew-pop-get-oauth2-client-id pnm)
-   (mew-pop-get-oauth2-client-secret pnm)
-   (mew-pop-get-oauth2-redirect-url pnm)))
+   (mew-pop-get-oauth2-info pnm)))
 
 (defun mew-pop-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-pop-get-user pnm))
@@ -717,12 +710,14 @@
         (mew-pop-set-account pnm (format "%s@%s" user server))
 	(mew-pop-set-auth pnm (mew-pop-auth case))
 	(mew-pop-set-auth-list pnm (mew-pop-auth-list case))
-	(mew-pop-set-oauth2-auth-url pnm (mew-pop-oauth2-auth-url case))
-	(mew-pop-set-oauth2-token-url pnm (mew-pop-oauth2-token-url case))
-	(mew-pop-set-oauth2-scope pnm (mew-pop-oauth2-scope case))
-	(mew-pop-set-oauth2-client-id pnm (mew-pop-oauth2-client-id case))
-	(mew-pop-set-oauth2-client-secret pnm (mew-pop-oauth2-client-secret case))
-	(mew-pop-set-oauth2-redirect-url pnm (mew-pop-oauth2-redirect-url case))
+        (mew-pop-set-oauth2-info
+         pnm
+         (mew-make-oauth2-info :auth-url(mew-pop-oauth2-auth-url case)
+                               :token-url (mew-pop-oauth2-token-url case)
+                               :scope (mew-pop-oauth2-scope case)
+                               :client-id (mew-pop-oauth2-client-id case)
+                               :client-secret (mew-pop-oauth2-client-secret case)
+                               :redirect-url (mew-pop-oauth2-redirect-url case)))
 	(mew-pop-set-status pnm "greeting")
 	(mew-pop-set-directive pnm directive)
 	(mew-pop-set-bnm pnm bnm)

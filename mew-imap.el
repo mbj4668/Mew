@@ -36,9 +36,7 @@
     "rtrs" "dels" "uidl" "range"
     "rttl" "rcnt" "dttl" "rgttl" "rgcnt" "dgttl" "dgcnt" "jcnt" "rfl" "hlds"
     "user" "auth" "auth-list" "passwd" "account"
-    "oauth2-auth-url" "oauth2-token-url"
-    "oauth2-scope" "oauth2-client-id"
-    "oauth2-client-secret" "oauth2-redirect-url"
+    "oauth2-info"
     "size" "truncated" "get-body"
     "flush" "no-msg" "msgdb" "done" "dispatched" "error"
     "delete"
@@ -1017,12 +1015,7 @@
 
 (defun mew-imap-oauth2-access-token (pnm)
   (mew-auth-oauth2-access-token
-   (mew-imap-get-oauth2-auth-url pnm)
-   (mew-imap-get-oauth2-token-url pnm)
-   (mew-imap-get-oauth2-scope pnm)
-   (mew-imap-get-oauth2-client-id pnm)
-   (mew-imap-get-oauth2-client-secret pnm)
-   (mew-imap-get-oauth2-redirect-url pnm)))
+   (mew-imap-get-oauth2-info pnm)))
 
 (defun mew-imap-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-imap-get-user pnm))
@@ -1360,12 +1353,14 @@
         (mew-imap-set-account pnm (format "%s@%s" user server))
 	(mew-imap-set-auth pnm (mew-imap-auth case))
 	(mew-imap-set-auth-list pnm (mew-imap-auth-list case))
-	(mew-imap-set-oauth2-auth-url pnm (mew-imap-oauth2-auth-url case))
-	(mew-imap-set-oauth2-token-url pnm (mew-imap-oauth2-token-url case))
-	(mew-imap-set-oauth2-scope pnm (mew-imap-oauth2-scope case))
-	(mew-imap-set-oauth2-client-id pnm (mew-imap-oauth2-client-id case))
-	(mew-imap-set-oauth2-client-secret pnm (mew-imap-oauth2-client-secret case))
-	(mew-imap-set-oauth2-redirect-url pnm (mew-imap-oauth2-redirect-url case))
+	(mew-imap-set-oauth2-info
+         pnm
+         (mew-make-oauth2-info :auth-url(mew-imap-oauth2-auth-url case)
+                               :token-url (mew-imap-oauth2-token-url case)
+                               :scope (mew-imap-oauth2-scope case)
+                               :client-id (mew-imap-oauth2-client-id case)
+                               :client-secret (mew-imap-oauth2-client-secret case)
+                               :redirect-url (mew-imap-oauth2-redirect-url case)))
 	(mew-imap-set-status pnm "greeting")
 	(mew-imap-set-directive pnm directive)
 	(mew-imap-set-bnm pnm bnm)

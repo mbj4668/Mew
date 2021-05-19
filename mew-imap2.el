@@ -20,15 +20,13 @@
     "src" "messages" "src-list" "src-list-orig"
     "server" "port" "ssh-server"
     "user" "auth" "auth-list" "account"
-    "oauth2-auth-url" "oauth2-token-url"
-    "oauth2-scope" "oauth2-client-id"
-    "oauth2-client-secret" "oauth2-redirect-url"
+    "oauth2-info"
     "status" "process" "ssh-process" "ssl-process"
     "cnt" "ttl" "literal+"
     ;; parameters used internally and should be initialized
     "tag" "string" "error" "auth-selected" "authl" "aux" "done"))
 
-(defvar mew-imap2-info-list-clean-length 26)
+(defvar mew-imap2-info-list-clean-length 22)
 
 (mew-info-defun "mew-imap2-" mew-imap2-info-list)
 
@@ -288,12 +286,7 @@
 
 (defun mew-imap2-oauth2-access-token (pnm)
   (mew-auth-oauth2-access-token
-   (mew-imap2-get-oauth2-auth-url pnm)
-   (mew-imap2-get-oauth2-token-url pnm)
-   (mew-imap2-get-oauth2-scope pnm)
-   (mew-imap2-get-oauth2-client-id pnm)
-   (mew-imap2-get-oauth2-client-secret pnm)
-   (mew-imap2-get-oauth2-redirect-url pnm)))
+   (mew-imap2-get-oauth2-info pnm)))
 
 (defun mew-imap2-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-imap2-get-user pnm))
@@ -472,12 +465,14 @@
       (mew-imap2-set-account pnm (format "%s@%s" user server))
       (mew-imap2-set-auth pnm (mew-imap-auth case))
       (mew-imap2-set-auth-list pnm (mew-imap-auth-list case))
-      (mew-imap2-set-oauth2-auth-url pnm (mew-imap-oauth2-auth-url case))
-      (mew-imap2-set-oauth2-token-url pnm (mew-imap-oauth2-token-url case))
-      (mew-imap2-set-oauth2-scope pnm (mew-imap-oauth2-scope case))
-      (mew-imap2-set-oauth2-client-id pnm (mew-imap-oauth2-client-id case))
-      (mew-imap2-set-oauth2-client-secret pnm (mew-imap-oauth2-client-secret case))
-      (mew-imap2-set-oauth2-redirect-url pnm (mew-imap-oauth2-redirect-url case))
+      (mew-imap2-set-oauth2-info
+       pnm
+       (mew-make-oauth2-info :auth-url(mew-imap-oauth2-auth-url case)
+                             :token-url (mew-imap-oauth2-token-url case)
+                             :scope (mew-imap-oauth2-scope case)
+                             :client-id (mew-imap-oauth2-client-id case)
+                             :client-secret (mew-imap-oauth2-client-secret case)
+                             :redirect-url (mew-imap-oauth2-redirect-url case)))
       (mew-imap2-set-status pnm "greeting")
       (mew-imap2-set-src-list pnm src-list)
       (mew-imap2-set-src-list-orig pnm src-list)
