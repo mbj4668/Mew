@@ -116,6 +116,8 @@
 (defun mew-smtp-command-wpwd (pro pnm)
   (let ((auth (mew-smtp-get-auth-selected pnm)))
     (mew-passwd-set-passwd (mew-smtp-passtag pnm) nil)
+    (if (string= auth "XOAUTH2")
+        (mew-auth-oauth2-refresh-access-token (mew-smtp-get-oauth2-info pnm)))
     (if auth
 	(mew-smtp-set-error pnm (format "SMTP %s password is wrong!" auth))
       (mew-smtp-set-error pnm "No SMTP AUTH available!"))
@@ -311,13 +313,13 @@
     (mew-smtp-process-send-string pro "AUTH PLAIN %s" plain)
     (mew-smtp-set-status pnm "auth-plain")))
 
-(defun mew-smtp-oauth2-access-token (pnm)
-  (mew-auth-oauth2-access-token
+(defun mew-smtp-oauth2-get-access-token (pnm)
+  (mew-auth-oauth2-get-access-token
    (mew-smtp-get-oauth2-info pnm)))
 
 (defun mew-smtp-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-smtp-get-auth-user pnm))
-         (token (mew-smtp-oauth2-access-token pnm))
+         (token (mew-smtp-oauth2-get-access-token pnm))
          (auth-string (mew-auth-xoauth2-auth-string user token)))
     (mew-smtp-process-send-string pro "AUTH XOAUTH2 %s" auth-string)
     (mew-smtp-set-status pnm "auth-xoauth2")))

@@ -170,6 +170,8 @@
      (t
       ;; pnm may be cleared already
       (mew-pop-message pnm "POP password is wrong!")))
+    (if (string= auth "XOAUTH2")
+        (mew-auth-oauth2-refresh-access-token (mew-pop-get-oauth2-info pnm)))
     (if clear-pass (mew-passwd-set-passwd (mew-pop-passtag pnm) nil))
     (if (eq directive 'exec)
 	(mew-summary-visible-buffer bnm))
@@ -511,13 +513,13 @@
 (defun mew-pop-auth-get-func (auth)
   (nth 1 (mew-assoc-case-equal auth mew-pop-auth-alist 0)))
 
-(defun mew-pop-oauth2-access-token (pnm)
-  (mew-auth-oauth2-access-token
+(defun mew-pop-oauth2-get-access-token (pnm)
+  (mew-auth-oauth2-get-access-token
    (mew-pop-get-oauth2-info pnm)))
 
 (defun mew-pop-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-pop-get-user pnm))
-         (token (mew-pop-oauth2-access-token pnm))
+         (token (mew-pop-oauth2-get-access-token pnm))
          (auth-string (mew-auth-xoauth2-auth-string user token)))
     (mew-pop-process-send-string pro "AUTH XOAUTH2 %s" auth-string)
     (mew-smtp-set-status pnm "auth-xoauth2")))

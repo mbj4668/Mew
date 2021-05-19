@@ -284,24 +284,23 @@
 ;;;;;;;;;;;;;;;;
 ;; XOAUTH2
 
-(defun mew-imap2-oauth2-access-token (pnm)
-  (mew-auth-oauth2-access-token
+(defun mew-imap2-oauth2-get-access-token (pnm)
+  (mew-auth-oauth2-get-access-token
    (mew-imap2-get-oauth2-info pnm)))
 
 (defun mew-imap2-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-imap2-get-user pnm))
-         (token (mew-imap2-oauth2-access-token pnm))
+         (token (mew-imap2-oauth2-get-access-token pnm))
          (auth-string (mew-auth-xoauth2-auth-string user token)))
     ;; XXX: need to reset satus if token is nil.
     (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
     (mew-imap2-set-status pnm "auth-xoauth2")))
 
 (defun mew-imap2-command-xoauth2-wpwd (pro pnm)
-  (mew-imap2-set-done pnm t)
+  (mew-imap2-set-error pnm "IMAP XOAUTH2 token is wrong!")
   (mew-passwd-set-passwd (mew-imap2-passtag pnm) nil)
-  (delete-process pro)
-  ;; XXX: Should be cared more! Clear process and filter without sending LOGOUT.
-  (error "IMAP XOAUTH2 token is wrong!"))
+  (mew-auth-oauth2-refresh-access-token (mew-imap2-get-oauth2-info pnm))
+  (mew-imap2-command-logout2 pro pnm))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
